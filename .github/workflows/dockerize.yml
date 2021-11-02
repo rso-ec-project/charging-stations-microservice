@@ -36,4 +36,4 @@ jobs:
       with:
         file: ./src/ChargingStations.API/Dockerfile
         push: true
-        tags: anzx10/rso-ec-project:${{steps.time.outputs.time}}
+        tags: anzx10/charging-stations-microservice:${{steps.time.outputs.time}}
