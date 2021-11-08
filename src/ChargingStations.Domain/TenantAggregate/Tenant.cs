@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using ChargingStations.Domain.ChargingStationAggregate;
+using System.Collections.Generic;
 
-namespace ChargingStations.Domain.Entities
+namespace ChargingStations.Domain.TenantAggregate
 {
     public class Tenant
     {

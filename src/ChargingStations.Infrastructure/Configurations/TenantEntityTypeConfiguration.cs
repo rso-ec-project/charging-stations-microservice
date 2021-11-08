@@ -1,4 +1,4 @@
-﻿using ChargingStations.Domain.Entities;
+﻿using ChargingStations.Domain.TenantAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

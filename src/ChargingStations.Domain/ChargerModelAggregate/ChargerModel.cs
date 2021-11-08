@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ChargingStations.Domain.ChargerAggregate;
 using System.Collections.Generic;
 
-namespace ChargingStations.Domain.Entities
+namespace ChargingStations.Domain.ChargerModelAggregate
 {
     public class ChargerModel
     {

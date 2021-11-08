@@ -1,4 +1,7 @@
-﻿namespace ChargingStations.Domain.Entities
+﻿using ChargingStations.Domain.ChargerModelAggregate;
+using ChargingStations.Domain.ChargingStationAggregate;
+
+namespace ChargingStations.Domain.ChargerAggregate
 {
     public class Charger
     {
