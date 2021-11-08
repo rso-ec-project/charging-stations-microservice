@@ -1,3 +1,5 @@
+using System;
+using Consul;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,11 +21,15 @@ namespace ChargingStations.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IConsulClient>(new ConsulClient(consulConfig =>
+            {
+                consulConfig.Address = new Uri(Configuration["ApplicationSettings:ConsulAddress"]);
+            }));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChargingStations.API", Version = "v1" });
+                c.SwaggerDoc("v0.1", new OpenApiInfo { Title = "ChargingStations.API", Version = "v0.1" });
             });
         }
 
@@ -34,7 +40,7 @@ namespace ChargingStations.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChargingStations.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v0.1/swagger.json", "ChargingStations.API v0.1"));
             }
 
             app.UseHttpsRedirection();
