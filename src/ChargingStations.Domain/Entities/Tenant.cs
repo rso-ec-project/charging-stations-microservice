@@ -9,6 +9,5 @@ namespace ChargingStations.Domain.Entities
         public string Address { get; set; }
 
         public virtual ICollection<ChargingStation> ChargingStations { get; set; }
-        public virtual ICollection<ChargerModel> ChargerModels { get; set; }
     }
 }
