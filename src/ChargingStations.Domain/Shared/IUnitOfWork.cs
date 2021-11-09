@@ -8,7 +8,7 @@ namespace ChargingStations.Domain.Shared
 {
     public interface IUnitOfWork
     {
-        IUnitOfWork CreateContext(DatabaseAccessMode databaseAccessMode);
+        IUnitOfWork CreateContext();
 
         IChargerRepository ChargerRepository { get; }
         
@@ -19,10 +19,5 @@ namespace ChargingStations.Domain.Shared
         ITenantRepository TenantRepository { get; }
 
         Task<int> CommitAsync();
-    }
-
-    public enum DatabaseAccessMode
-    {
-        ReadWrite = 1
     }
 }
