@@ -1,9 +1,10 @@
 ﻿using ChargingStations.Domain.ChargerModelAggregate;
 using ChargingStations.Domain.ChargingStationAggregate;
+using ChargingStations.Domain.Shared.Entities;
 
 namespace ChargingStations.Domain.ChargerAggregate
 {
-    public class Charger
+    public class Charger : Entity<int>
     {
         public int ChargerId { get; set; }
         public string Name { get; set; }

@@ -1,4 +1,10 @@
+using ChargingStations.Domain.ChargerAggregate;
+using ChargingStations.Domain.ChargerModelAggregate;
+using ChargingStations.Domain.ChargingStationAggregate;
+using ChargingStations.Domain.Shared;
+using ChargingStations.Domain.TenantAggregate;
 using ChargingStations.Infrastructure;
+using ChargingStations.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +31,13 @@ namespace ChargingStations.API
             {
                 options.UseSqlServer(Configuration.GetSection("ConnectionString").Value);
             });
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IChargerRepository, ChargerRepository>();
+            services.AddScoped<IChargerModelRepository, ChargerModelRepository>();
+            services.AddScoped<IChargingStationRepository, ChargingStationRepository>();
+            services.AddScoped<ITenantRepository, TenantRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
