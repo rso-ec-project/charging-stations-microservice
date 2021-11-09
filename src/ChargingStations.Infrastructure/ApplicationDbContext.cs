@@ -1,5 +1,7 @@
 ﻿using ChargingStations.Domain.ChargerAggregate;
-using ChargingStations.Domain.Entities;
+using ChargingStations.Domain.ChargerModelAggregate;
+using ChargingStations.Domain.ChargingStationAggregate;
+using ChargingStations.Domain.TenantAggregate;
 using ChargingStations.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
