@@ -1,10 +1,11 @@
 ﻿using ChargingStations.Domain.ChargerAggregate;
+using ChargingStations.Domain.Shared.Entities;
 using ChargingStations.Domain.TenantAggregate;
 using System.Collections.Generic;
 
 namespace ChargingStations.Domain.ChargingStationAggregate
 {
-    public class ChargingStation
+    public class ChargingStation : Entity<int>
     {
         public int ChargingStationId { get; set; }
         public string Name { get; set; }
