@@ -27,7 +27,7 @@ namespace ChargingStations.Infrastructure
             modelBuilder.ApplyConfiguration(new TenantEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ChargerModelEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ChargingStationEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new ChargerModelEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ChargerEntityTypeConfiguration());
         }
     }
 }

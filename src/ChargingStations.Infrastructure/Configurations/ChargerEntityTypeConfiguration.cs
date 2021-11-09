@@ -37,7 +37,7 @@ namespace ChargingStations.Infrastructure.Configurations
 
             builder.HasOne(x => x.ChargerModel)
                 .WithMany(y => y.Chargers)
-                .HasForeignKey(z => z.ChargerId)
+                .HasForeignKey(z => z.ChargerModelId)
                 .HasConstraintName("FK_Charger_ChargerModel_ChargerModelId");
 
             builder.Property(x => x.ChargerModelId)
