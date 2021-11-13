@@ -22,5 +22,11 @@ namespace ChargingStations.Application.Tenants
             var tenants = await _unitOfWork.TenantRepository.GetAsync();
             return _mapper.Map<List<Tenant>, List<TenantDto>>(tenants);
         }
+
+        public async Task<TenantDto> GetAsync(int id)
+        {
+            var tenant = await _unitOfWork.TenantRepository.GetAsync(id);
+            return _mapper.Map<Tenant, TenantDto>(tenant);
+        }
     }
 }

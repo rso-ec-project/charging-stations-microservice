@@ -24,5 +24,19 @@ namespace ChargingStations.API.Controllers
         {
             return await _tenantService.GetAsync();
         }
+
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<TenantDto>> Get(int id)
+        {
+            var tenant = await _tenantService.GetAsync(id);
+
+            if (tenant == null)
+                return NotFound();
+
+            return tenant;
+        }
     }
 }
