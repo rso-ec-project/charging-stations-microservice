@@ -45,7 +45,20 @@ namespace ChargingStations.Application.ChargingStations
                 return new List<ChargerDto>();
 
             chargers = chargers.Where(x => x.ChargingStationId == chargingStationId).ToList();
-            return _mapper.Map<List<Charger>, List<ChargerDto>>(chargers);
+
+            var chargerDtos = new List<ChargerDto>();
+
+            foreach (var charger in chargers)
+            {
+                var chargerDto = _mapper.Map<Charger, ChargerDto>(charger);
+                var chargerModel = await _unitOfWork.ChargerModelRepository.GetAsync(charger.ChargerModelId);
+
+                chargerDto.Manufacturer = chargerModel.Manufacturer;
+                chargerDto.ModelName = chargerModel.Name;
+                chargerDtos.Add(chargerDto);
+            }
+
+            return chargerDtos;
         }
     }
 }
