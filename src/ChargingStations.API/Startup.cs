@@ -55,7 +55,7 @@ namespace ChargingStations.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v0.1", new OpenApiInfo { Title = "ChargingStations.API", Version = "v0.1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChargingStations.API", Version = "v1" });
             });
         }
 
@@ -84,7 +84,7 @@ namespace ChargingStations.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v0.1/swagger.json", "ChargingStations.API v0.1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/1/swagger.json", "ChargingStations.API v1"));
             }
 
             app.UseHttpsRedirection();
