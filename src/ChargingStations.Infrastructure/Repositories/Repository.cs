@@ -27,7 +27,6 @@ namespace ChargingStations.Infrastructure.Repositories
         public virtual async Task<List<TEntity>> GetAsync()
         {
             var result = await Set().AsTracking().ToListAsync();
-
             return result.Any() ? result : null;
         }
         
