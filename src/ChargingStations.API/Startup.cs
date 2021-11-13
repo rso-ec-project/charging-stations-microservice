@@ -2,6 +2,7 @@ using AutoMapper;
 using ChargingStations.Application.ChargerModels;
 using ChargingStations.Application.Chargers;
 using ChargingStations.Application.ChargingStations;
+using ChargingStations.Application.Tenants;
 using ChargingStations.Domain.ChargerAggregate;
 using ChargingStations.Domain.ChargerModelAggregate;
 using ChargingStations.Domain.ChargingStationAggregate;
@@ -44,6 +45,7 @@ namespace ChargingStations.API
 
             services.AddScoped<IChargerModelService, ChargerModelService>();
             services.AddScoped<IChargingStationService, ChargingStationService>();
+            services.AddScoped<ITenantService, TenantService>();
 
             services.AddScoped<IChargerRepository, ChargerRepository>();
             services.AddScoped<IChargerModelRepository, ChargerModelRepository>();
@@ -69,6 +71,7 @@ namespace ChargingStations.API
                 mc.AddProfile(new ChargerModelMapperProfile());
                 mc.AddProfile(new ChargingStationMapperProfile());
                 mc.AddProfile(new ChargerMapperProfile());
+                mc.AddProfile(new TenantMapperProfile());
             });
 
             return mapperConfig;
