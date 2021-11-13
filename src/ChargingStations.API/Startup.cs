@@ -1,5 +1,6 @@
 using AutoMapper;
 using ChargingStations.Application.ChargerModels;
+using ChargingStations.Application.ChargingStations;
 using ChargingStations.Domain.ChargerAggregate;
 using ChargingStations.Domain.ChargerModelAggregate;
 using ChargingStations.Domain.ChargingStationAggregate;
@@ -41,6 +42,7 @@ namespace ChargingStations.API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IChargerModelService, ChargerModelService>();
+            services.AddScoped<IChargingStationService, ChargingStationService>();
 
             services.AddScoped<IChargerRepository, ChargerRepository>();
             services.AddScoped<IChargerModelRepository, ChargerModelRepository>();
@@ -64,6 +66,7 @@ namespace ChargingStations.API
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new ChargerModelMapperProfile());
+                mc.AddProfile(new ChargingStationMapperProfile());
             });
 
             return mapperConfig;
