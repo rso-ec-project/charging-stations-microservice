@@ -1,4 +1,5 @@
-﻿using ChargingStations.Application.Tenants;
+﻿using ChargingStations.Application.ChargingStations;
+using ChargingStations.Application.Tenants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -37,6 +38,20 @@ namespace ChargingStations.API.Controllers
                 return NotFound();
 
             return tenant;
+        }
+
+        [HttpGet("id/ChargingStations")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<List<ChargingStationDto>>> GetChargingStations(int id)
+        {
+            var chargingStations = await _tenantService.GetChargingStationsAsync(id);
+
+            if (chargingStations == null)
+                return NotFound();
+
+            return chargingStations;
         }
     }
 }
