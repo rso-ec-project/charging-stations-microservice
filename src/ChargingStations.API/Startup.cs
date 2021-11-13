@@ -1,5 +1,6 @@
 using AutoMapper;
 using ChargingStations.Application.ChargerModels;
+using ChargingStations.Application.Chargers;
 using ChargingStations.Application.ChargingStations;
 using ChargingStations.Domain.ChargerAggregate;
 using ChargingStations.Domain.ChargerModelAggregate;
@@ -67,6 +68,7 @@ namespace ChargingStations.API
             {
                 mc.AddProfile(new ChargerModelMapperProfile());
                 mc.AddProfile(new ChargingStationMapperProfile());
+                mc.AddProfile(new ChargerMapperProfile());
             });
 
             return mapperConfig;
