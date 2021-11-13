@@ -1,3 +1,5 @@
+using AutoMapper;
+using ChargingStations.Application.ChargerModels;
 using ChargingStations.Domain.ChargerAggregate;
 using ChargingStations.Domain.ChargerModelAggregate;
 using ChargingStations.Domain.ChargingStationAggregate;
@@ -29,10 +31,16 @@ namespace ChargingStations.API
         {
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
-                options.UseSqlServer(Configuration.GetSection("ConnectionString").Value);
+                options.UseSqlServer(FormatConnectionString(Configuration.GetSection("ConnectionString").Value));
             });
 
+            var mapperConfig = CreateMapperConfiguration();
+            var mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IChargerModelService, ChargerModelService>();
 
             services.AddScoped<IChargerRepository, ChargerRepository>();
             services.AddScoped<IChargerModelRepository, ChargerModelRepository>();
@@ -44,6 +52,21 @@ namespace ChargingStations.API
             {
                 c.SwaggerDoc("v0.1", new OpenApiInfo { Title = "ChargingStations.API", Version = "v0.1" });
             });
+        }
+
+        private static string FormatConnectionString(string connectionString)
+        {
+            return connectionString.Replace("\"", "");
+        }
+
+        private static MapperConfiguration CreateMapperConfiguration()
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new ChargerModelMapperProfile());
+            });
+
+            return mapperConfig;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
