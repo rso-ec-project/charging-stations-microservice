@@ -24,5 +24,17 @@ namespace ChargingStations.API.Controllers
         {
             return await _chargingStationService.GetAsync();
         }
+
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ChargingStationDto>> Get(int id)
+        {
+            var chargingStation = await _chargingStationService.GetAsync(id);
+            if (chargingStation == null)
+                return NotFound();
+            return chargingStation;
+        }
     }
 }

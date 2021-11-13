@@ -22,5 +22,11 @@ namespace ChargingStations.Application.ChargingStations
             var chargingStations = await _unitOfWork.ChargingStationRepository.GetAsync();
             return _mapper.Map<List<ChargingStation>, List<ChargingStationDto>>(chargingStations);
         }
+
+        public async Task<ChargingStationDto> GetAsync(int chargingStationId)
+        {
+            var chargingStation = await _unitOfWork.ChargingStationRepository.GetAsync(chargingStationId);
+            return _mapper.Map<ChargingStation, ChargingStationDto>(chargingStation);
+        }
     }
 }
