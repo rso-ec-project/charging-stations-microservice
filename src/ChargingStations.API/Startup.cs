@@ -43,6 +43,7 @@ namespace ChargingStations.API
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddScoped<IChargerService, ChargerService>();
             services.AddScoped<IChargerModelService, ChargerModelService>();
             services.AddScoped<IChargingStationService, ChargingStationService>();
             services.AddScoped<ITenantService, TenantService>();
@@ -84,7 +85,7 @@ namespace ChargingStations.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/1/swagger.json", "ChargingStations.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChargingStations.API v1"));
             }
 
             app.UseHttpsRedirection();
