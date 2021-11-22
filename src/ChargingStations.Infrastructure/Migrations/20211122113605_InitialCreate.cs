@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ChargingStations.Infrastructure.Migrations
 {
@@ -10,10 +11,11 @@ namespace ChargingStations.Infrastructure.Migrations
                 name: "charger_model",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    manufacturer = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    manufacturer = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,10 +26,11 @@ namespace ChargingStations.Infrastructure.Migrations
                 name: "tenant",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,13 +41,14 @@ namespace ChargingStations.Infrastructure.Migrations
                 name: "charging_station",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    latitude = table.Column<double>(type: "float", nullable: false),
-                    longitude = table.Column<double>(type: "float", nullable: false),
-                    tenant_id = table.Column<int>(type: "int", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    latitude = table.Column<double>(type: "double precision", nullable: false),
+                    longitude = table.Column<double>(type: "double precision", nullable: false),
+                    tenant_id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,12 +65,13 @@ namespace ChargingStations.Infrastructure.Migrations
                 name: "charger",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    charging_fee_per_kwh = table.Column<double>(type: "float", nullable: false),
-                    charging_station_id = table.Column<int>(type: "int", nullable: false),
-                    charger_model_id = table.Column<int>(type: "int", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    charging_fee_per_kwh = table.Column<double>(type: "double precision", nullable: false),
+                    charging_station_id = table.Column<int>(type: "integer", nullable: false),
+                    charger_model_id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

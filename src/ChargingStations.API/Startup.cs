@@ -34,7 +34,7 @@ namespace ChargingStations.API
         {
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
-                options.UseSqlServer(FormatConnectionString(Configuration.GetSection("ConnectionString").Value));
+                options.UseNpgsql(FormatConnectionString(Configuration.GetSection("ConnectionString").Value));
             });
 
             var mapperConfig = CreateMapperConfiguration();
