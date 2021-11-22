@@ -34,7 +34,10 @@ namespace ChargingStations.API
         {
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
-                options.UseNpgsql(FormatConnectionString(Configuration.GetSection("ConnectionString").Value));
+                var isProductionMode = FormatConfigString(Configuration.GetSection("DatabaseMode").Value) == "prod";
+                var connectionString = Configuration.GetSection(isProductionMode ? "ConnectionString" : "LocalConnectionString").Value;
+
+                options.UseNpgsql(FormatConfigString(connectionString));
             });
 
             var mapperConfig = CreateMapperConfiguration();
@@ -60,7 +63,7 @@ namespace ChargingStations.API
             });
         }
 
-        private static string FormatConnectionString(string connectionString)
+        private static string FormatConfigString(string connectionString)
         {
             return connectionString.Replace("\"", "");
         }
