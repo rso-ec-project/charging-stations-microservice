@@ -39,9 +39,6 @@ namespace ChargingStations.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("charging_station_id");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -64,9 +61,6 @@ namespace ChargingStations.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Manufacturer")
                         .IsRequired()
@@ -98,9 +92,6 @@ namespace ChargingStations.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("address");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision")
@@ -140,9 +131,6 @@ namespace ChargingStations.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("address");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
