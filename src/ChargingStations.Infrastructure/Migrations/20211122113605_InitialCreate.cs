@@ -15,7 +15,6 @@ namespace ChargingStations.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
                     manufacturer = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
-                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +29,6 @@ namespace ChargingStations.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
                     address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
-                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,7 +46,6 @@ namespace ChargingStations.Infrastructure.Migrations
                     latitude = table.Column<double>(type: "double precision", nullable: false),
                     longitude = table.Column<double>(type: "double precision", nullable: false),
                     tenant_id = table.Column<int>(type: "integer", nullable: false),
-                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,7 +68,6 @@ namespace ChargingStations.Infrastructure.Migrations
                     charging_fee_per_kwh = table.Column<double>(type: "double precision", nullable: false),
                     charging_station_id = table.Column<int>(type: "integer", nullable: false),
                     charger_model_id = table.Column<int>(type: "integer", nullable: false),
-                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
