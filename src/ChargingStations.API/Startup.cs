@@ -11,6 +11,7 @@ using ChargingStations.Domain.TenantAggregate;
 using ChargingStations.Infrastructure;
 using ChargingStations.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -56,6 +57,9 @@ namespace ChargingStations.API
             services.AddScoped<IChargingStationRepository, ChargingStationRepository>();
             services.AddScoped<ITenantRepository, TenantRepository>();
 
+            services.AddHealthChecks()
+                .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -100,6 +104,14 @@ namespace ChargingStations.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
+                {
+                    Predicate = (check) => check.Tags.Contains("ready")
+                });
+                endpoints.MapHealthChecks("health/live", new HealthCheckOptions()
+                {
+                    Predicate = _ => false
+                });
             });
         }
     }
