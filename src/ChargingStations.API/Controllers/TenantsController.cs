@@ -26,7 +26,7 @@ namespace ChargingStations.API.Controllers
             return await _tenantService.GetAsync();
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -40,7 +40,7 @@ namespace ChargingStations.API.Controllers
             return tenant;
         }
 
-        [HttpGet("id/ChargingStations")]
+        [HttpGet("{id}/ChargingStations")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
