@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace ChargingStations.API
 {
@@ -34,10 +35,7 @@ namespace ChargingStations.API
         {
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
-                var isProductionMode = FormatConfigString(Configuration.GetSection("DatabaseMode").Value) == "prod";
-                var connectionString = Configuration.GetSection(isProductionMode ? "ConnectionString" : "LocalConnectionString").Value;
-
-                options.UseNpgsql(FormatConfigString(connectionString));
+                options.UseNpgsql(GetConnectionString());
             });
 
             var mapperConfig = CreateMapperConfiguration();
@@ -63,9 +61,14 @@ namespace ChargingStations.API
             });
         }
 
-        private static string FormatConfigString(string connectionString)
+        private string GetConnectionString()
         {
-            return connectionString.Replace("\"", "");
+            var host = Environment.GetEnvironmentVariable("DB_HOST");
+            var database = Environment.GetEnvironmentVariable("DB_NAME");
+            var username = Environment.GetEnvironmentVariable("DB_USERNAME");
+            var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+            return $"Host={host};Database={database};Username={username};Password={password}";
         }
 
         private static MapperConfiguration CreateMapperConfiguration()
