@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ChargingStations.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211122113605_InitialCreate")]
+    [Migration("20211201081825_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,10 +23,9 @@ namespace ChargingStations.Infrastructure.Migrations
 
             modelBuilder.Entity("ChargingStations.Domain.ChargerAggregate.Charger", b =>
                 {
-                    b.Property<int>("ChargerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("ChargerModelId")
@@ -41,16 +40,13 @@ namespace ChargingStations.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("charging_station_id");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
-                    b.HasKey("ChargerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ChargerModelId");
 
@@ -61,48 +57,40 @@ namespace ChargingStations.Infrastructure.Migrations
 
             modelBuilder.Entity("ChargingStations.Domain.ChargerModelAggregate.ChargerModel", b =>
                 {
-                    b.Property<int>("ChargerModelId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Manufacturer")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("manufacturer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
-                    b.HasKey("ChargerModelId");
+                    b.HasKey("Id");
 
                     b.ToTable("charger_model");
                 });
 
             modelBuilder.Entity("ChargingStations.Domain.ChargingStationAggregate.ChargingStation", b =>
                 {
-                    b.Property<int>("ChargingStationId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("address");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision")
@@ -115,14 +103,14 @@ namespace ChargingStations.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer")
                         .HasColumnName("tenant_id");
 
-                    b.HasKey("ChargingStationId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TenantId");
 
@@ -131,28 +119,24 @@ namespace ChargingStations.Infrastructure.Migrations
 
             modelBuilder.Entity("ChargingStations.Domain.TenantAggregate.Tenant", b =>
                 {
-                    b.Property<int>("TenantId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("address");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
-                    b.HasKey("TenantId");
+                    b.HasKey("Id");
 
                     b.ToTable("tenant");
                 });
