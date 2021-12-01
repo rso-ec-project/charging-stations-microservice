@@ -8,7 +8,7 @@ namespace ChargingStations.Application.Chargers
         public ChargerMapperProfile()
         {
             CreateMap<Charger, ChargerDto>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ChargerId))
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ChargingFeePerKwh, opts => opts.MapFrom(src => src.ChargingFeePerKwh))
                 ;

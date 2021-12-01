@@ -11,50 +11,50 @@ namespace ChargingStations.Infrastructure.Migrations
                 name: "charger_model",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
-                    manufacturer = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    manufacturer = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_charger_model", x => x.id);
+                    table.PrimaryKey("PK_charger_model", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "tenant",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
-                    address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tenant", x => x.id);
+                    table.PrimaryKey("PK_tenant", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "charging_station",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
-                    address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     latitude = table.Column<double>(type: "double precision", nullable: false),
                     longitude = table.Column<double>(type: "double precision", nullable: false),
-                    tenant_id = table.Column<int>(type: "integer", nullable: false),
+                    tenant_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_charging_station", x => x.id);
+                    table.PrimaryKey("PK_charging_station", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ChargingStation_Tenant_TenantId",
                         column: x => x.tenant_id,
                         principalTable: "tenant",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -62,27 +62,27 @@ namespace ChargingStations.Infrastructure.Migrations
                 name: "charger",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     charging_fee_per_kwh = table.Column<double>(type: "double precision", nullable: false),
                     charging_station_id = table.Column<int>(type: "integer", nullable: false),
-                    charger_model_id = table.Column<int>(type: "integer", nullable: false),
+                    charger_model_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_charger", x => x.id);
+                    table.PrimaryKey("PK_charger", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Charger_ChargerModel_ChargerModelId",
                         column: x => x.charger_model_id,
                         principalTable: "charger_model",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Charger_ChargingStation_ChargingStationId",
                         column: x => x.charging_station_id,
                         principalTable: "charging_station",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
