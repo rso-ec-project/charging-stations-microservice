@@ -2,14 +2,14 @@
 using ChargingStations.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ChargingStations.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211109162257_InitialCreate")]
+    [Migration("20211201081825_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,37 +17,36 @@ namespace ChargingStations.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.12")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("ChargingStations.Domain.ChargerAggregate.Charger", b =>
                 {
-                    b.Property<int>("ChargerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("ChargerModelId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("charger_model_id");
 
                     b.Property<double>("ChargingFeePerKwh")
-                        .HasColumnType("float")
+                        .HasColumnType("double precision")
                         .HasColumnName("charging_fee_per_kwh");
 
                     b.Property<int>("ChargingStationId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("charging_station_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
-                    b.HasKey("ChargerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ChargerModelId");
 
@@ -58,62 +57,60 @@ namespace ChargingStations.Infrastructure.Migrations
 
             modelBuilder.Entity("ChargingStations.Domain.ChargerModelAggregate.ChargerModel", b =>
                 {
-                    b.Property<int>("ChargerModelId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Manufacturer")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("manufacturer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
-                    b.HasKey("ChargerModelId");
+                    b.HasKey("Id");
 
                     b.ToTable("charger_model");
                 });
 
             modelBuilder.Entity("ChargingStations.Domain.ChargingStationAggregate.ChargingStation", b =>
                 {
-                    b.Property<int>("ChargingStationId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("address");
 
                     b.Property<double>("Latitude")
-                        .HasColumnType("float")
+                        .HasColumnType("double precision")
                         .HasColumnName("latitude");
 
                     b.Property<double>("Longitude")
-                        .HasColumnType("float")
+                        .HasColumnType("double precision")
                         .HasColumnName("longitude");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("tenant_id");
 
-                    b.HasKey("ChargingStationId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TenantId");
 
@@ -122,25 +119,24 @@ namespace ChargingStations.Infrastructure.Migrations
 
             modelBuilder.Entity("ChargingStations.Domain.TenantAggregate.Tenant", b =>
                 {
-                    b.Property<int>("TenantId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("address");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
-                    b.HasKey("TenantId");
+                    b.HasKey("Id");
 
                     b.ToTable("tenant");
                 });

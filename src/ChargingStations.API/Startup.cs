@@ -11,12 +11,14 @@ using ChargingStations.Domain.TenantAggregate;
 using ChargingStations.Infrastructure;
 using ChargingStations.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace ChargingStations.API
 {
@@ -34,7 +36,7 @@ namespace ChargingStations.API
         {
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
-                options.UseSqlServer(FormatConnectionString(Configuration.GetSection("ConnectionString").Value));
+                options.UseNpgsql(GetConnectionString());
             });
 
             var mapperConfig = CreateMapperConfiguration();
@@ -53,6 +55,9 @@ namespace ChargingStations.API
             services.AddScoped<IChargingStationRepository, ChargingStationRepository>();
             services.AddScoped<ITenantRepository, TenantRepository>();
 
+            services.AddHealthChecks()
+                .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -60,9 +65,14 @@ namespace ChargingStations.API
             });
         }
 
-        private static string FormatConnectionString(string connectionString)
+        private string GetConnectionString()
         {
-            return connectionString.Replace("\"", "");
+            var host = Environment.GetEnvironmentVariable("DB_HOST");
+            var database = Environment.GetEnvironmentVariable("DB_NAME");
+            var username = Environment.GetEnvironmentVariable("DB_USERNAME");
+            var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+            return $"Host={host};Database={database};Username={username};Password={password}";
         }
 
         private static MapperConfiguration CreateMapperConfiguration()
@@ -97,6 +107,14 @@ namespace ChargingStations.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
+                {
+                    Predicate = (check) => check.Tags.Contains("ready")
+                });
+                endpoints.MapHealthChecks("health/live", new HealthCheckOptions()
+                {
+                    Predicate = _ => false
+                });
             });
         }
     }

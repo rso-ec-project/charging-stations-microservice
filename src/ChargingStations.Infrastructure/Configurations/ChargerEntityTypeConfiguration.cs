@@ -10,13 +10,6 @@ namespace ChargingStations.Infrastructure.Configurations
         {
             builder.ToTable("charger");
 
-            builder.HasKey(x => x.ChargerId);
-
-            builder.Property(x => x.ChargerId)
-                .HasColumnName("id")
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-
             builder.Property(x => x.Name)
                 .HasColumnName("name")
                 .IsRequired()
