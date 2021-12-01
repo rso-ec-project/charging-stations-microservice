@@ -7,7 +7,6 @@ namespace ChargingStations.Domain.ChargingStationAggregate
 {
     public class ChargingStation : Entity<int>
     {
-        public int ChargingStationId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public double Latitude { get; set; }
