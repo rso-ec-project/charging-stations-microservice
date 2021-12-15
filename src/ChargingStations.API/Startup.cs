@@ -1,4 +1,5 @@
 using AutoMapper;
+using ChargingStations.API.Extensions;
 using ChargingStations.Application.ChargerModels;
 using ChargingStations.Application.Chargers;
 using ChargingStations.Application.ChargingStations;
@@ -13,11 +14,10 @@ using ChargingStations.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using System;
 
 namespace ChargingStations.API
@@ -59,9 +59,14 @@ namespace ChargingStations.API
                 .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+
+            services.AddSwagger();
+
+            services.AddApiVersioning(config =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChargingStations.API", Version = "v1" });
+                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
             });
         }
 
@@ -91,12 +96,8 @@ namespace ChargingStations.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChargingStations.API v1"));
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChargingStations.API v1"));
 
             app.UseHttpsRedirection();
 
