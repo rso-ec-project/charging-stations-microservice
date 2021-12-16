@@ -19,7 +19,7 @@ namespace ChargingStations.API.Controllers
             _chargerService = chargerService;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ChargerDto>> Get(int id)

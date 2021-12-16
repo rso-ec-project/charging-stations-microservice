@@ -29,7 +29,7 @@ namespace ChargingStations.API.Controllers
             return await _chargingStationService.GetAsync();
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -43,7 +43,7 @@ namespace ChargingStations.API.Controllers
             return chargingStation;
         }
 
-        [HttpGet("id/Chargers")]
+        [HttpGet("{id}/Chargers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
