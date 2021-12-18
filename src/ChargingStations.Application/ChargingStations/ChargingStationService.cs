@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ChargingStations.Application.Chargers;
+using ChargingStations.Application.CommentsMicroservice.Ratings;
 using ChargingStations.Domain.ChargerAggregate;
 using ChargingStations.Domain.ChargingStationAggregate;
 using ChargingStations.Domain.Shared;
@@ -13,11 +14,13 @@ namespace ChargingStations.Application.ChargingStations
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRatingService _ratingService;
 
-        public ChargingStationService(IMapper mapper, IUnitOfWork unitOfWork)
+        public ChargingStationService(IMapper mapper, IUnitOfWork unitOfWork, IRatingService ratingService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _ratingService = ratingService;
         }
 
         public async Task<List<ChargingStationDto>> GetAsync()
@@ -29,7 +32,10 @@ namespace ChargingStations.Application.ChargingStations
         public async Task<ChargingStationDto> GetAsync(int chargingStationId)
         {
             var chargingStation = await _unitOfWork.ChargingStationRepository.GetAsync(chargingStationId);
-            return _mapper.Map<ChargingStation, ChargingStationDto>(chargingStation);
+            var chargingStationDto = _mapper.Map<ChargingStation, ChargingStationDto>(chargingStation);
+            if (chargingStation != null)
+                chargingStationDto.RatingDetails = await _ratingService.GetAsync(chargingStationId);
+            return chargingStationDto;
         }
 
         public async Task<List<ChargerDto>> GetChargersAsync(int chargingStationId)
