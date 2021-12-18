@@ -1,4 +1,6 @@
-﻿namespace ChargingStations.Application.ChargingStations
+﻿using ChargingStations.Application.CommentsMicroservice.Ratings;
+
+namespace ChargingStations.Application.ChargingStations
 {
     public class ChargingStationDto
     {
@@ -8,5 +10,6 @@
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public int TenantId { get; set; }
+        public RatingDto RatingDetails { get; set; }
     }
 }
