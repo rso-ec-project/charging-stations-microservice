@@ -4,6 +4,7 @@ using ChargingStations.Application.ChargerModels;
 using ChargingStations.Application.Chargers;
 using ChargingStations.Application.ChargingStations;
 using ChargingStations.Application.CommentsMicroservice.Ratings;
+using ChargingStations.Application.ReservationsMicroService.ReservationSlots;
 using ChargingStations.Application.Shared;
 using ChargingStations.Application.Tenants;
 using ChargingStations.Domain.ChargerAggregate;
@@ -54,6 +55,7 @@ namespace ChargingStations.API
             services.AddScoped<ITenantService, TenantService>();
 
             services.AddScoped<IRatingService, RatingService>();
+            services.AddScoped<IReservationSlotService, ReservationSlotService>();
 
             services.AddScoped<IChargerRepository, ChargerRepository>();
             services.AddScoped<IChargerModelRepository, ChargerModelRepository>();
@@ -73,12 +75,23 @@ namespace ChargingStations.API
                     }
                 );
 
+            services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
+                {
+                    SetHttpClientBaseAddress(client, new Uri(Configuration["ApplicationSettings:ReservationsMSAddress"]));
+                    SetHttpClientRequestHeader(client, "ChargingStationsMS");
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    }
+                );
+
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
 
-            services.AddControllers()
-                .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; });
-
+            services.AddControllers();
             services.AddSwagger();
 
             services.AddApiVersioning(config =>
