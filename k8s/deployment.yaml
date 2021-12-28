@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: charging-stations-ms-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: charging-stations-ms
+  template:
+    metadata:
+      labels:
+        app: charging-stations-ms
+    spec:
+      containers:
+        - image: anzx10/charging-stations-microservice:2021-12-02-00-50-51
+          name: charging-stations-ms
+          env:
+            - name: DB_HOST
+              value: tai.db.elephantsql.com
+            - name: DB_NAME
+              value: syypqwkg
+            - name: DB_USERNAME
+              value: syypqwkg
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: charging-stations-ms
+                  key: db-password
+          ports:
+            - containerPort: 80
+              name: server
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health/live
+          #     port: server
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 3
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health/ready
+          #     port: server
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 3
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: charging-stations-ms
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: server
+  selector:
+    app: charging-stations-ms

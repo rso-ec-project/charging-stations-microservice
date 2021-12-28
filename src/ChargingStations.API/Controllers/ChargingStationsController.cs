@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace ChargingStations.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [Produces("application/json")]
     public class ChargingStationsController : ControllerBase
     {
         private readonly IChargingStationService _chargingStationService;
