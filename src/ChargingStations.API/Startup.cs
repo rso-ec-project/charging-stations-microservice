@@ -91,7 +91,8 @@ namespace ChargingStations.API
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; });
+
             services.AddSwagger();
 
             services.AddApiVersioning(config =>

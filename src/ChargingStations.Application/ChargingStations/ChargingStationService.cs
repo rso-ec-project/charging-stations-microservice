@@ -37,8 +37,10 @@ namespace ChargingStations.Application.ChargingStations
         {
             var chargingStation = await _unitOfWork.ChargingStationRepository.GetAsync(chargingStationId);
             var chargingStationDto = _mapper.Map<ChargingStation, ChargingStationDto>(chargingStation);
-            if (chargingStation != null)
-                chargingStationDto.RatingDetails = await _ratingService.GetAsync(chargingStationId);
+            if (chargingStation == null)
+                return null;
+
+            chargingStationDto.RatingDetails = await _ratingService.GetAsync(chargingStationId);
 
             var chargers = await _unitOfWork.ChargerRepository.GetAsync();
 
@@ -47,10 +49,12 @@ namespace ChargingStations.Application.ChargingStations
 
             chargers = chargers.Where(x => x.ChargingStationId == chargingStationId).ToList();
 
+            var startTime = DateTime.Now;
+            var endTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, 23, 59, 0).AddDays(1);
+
             foreach (var chargerDto in chargers)
             {
-                var reservationSlots = await _reservationSlotService.GetAsync(chargerDto.Id,
-                    new DateTime(2021, 12, 19, 9, 0, 0), new DateTime(2021, 12, 19, 16, 0, 0));
+                var reservationSlots = await _reservationSlotService.GetAsync(chargerDto.Id, startTime, endTime);
 
                 if (reservationSlots == null)
                 {
@@ -62,7 +66,11 @@ namespace ChargingStations.Application.ChargingStations
                 }
             }
 
-            if (reservationSlotDtos.All(x => x == null))
+            if (!reservationSlotDtos.Any())
+            {
+                chargingStationDto.ReservationSlots = new List<ReservationSlotDto>();
+            }
+            else if (reservationSlotDtos.All(x => x == null))
             {
                 chargingStationDto.ReservationSlots = null;
             }
@@ -102,6 +110,8 @@ namespace ChargingStations.Application.ChargingStations
 
                 chargerDto.Manufacturer = chargerModel.Manufacturer;
                 chargerDto.ModelName = chargerModel.Name;
+                chargerDto.ChargingStationName = chargingStation.Name;
+                chargerDto.Address = chargingStation.Address;
                 chargerDtos.Add(chargerDto);
             }
 

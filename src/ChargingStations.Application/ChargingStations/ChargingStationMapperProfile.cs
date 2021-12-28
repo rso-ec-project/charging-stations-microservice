@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using ChargingStations.Application.ReservationsMicroService.ReservationSlots;
 using ChargingStations.Domain.ChargingStationAggregate;
+using System.Collections.Generic;
 
 namespace ChargingStations.Application.ChargingStations
 {
@@ -14,6 +16,7 @@ namespace ChargingStations.Application.ChargingStations
                 .ForMember(dest => dest.Latitude, opts => opts.MapFrom(src => src.Latitude))
                 .ForMember(dest => dest.Longitude, opts => opts.MapFrom(src => src.Longitude))
                 .ForMember(dest => dest.TenantId, opts => opts.MapFrom(src => src.TenantId))
+                .ForMember(dest => dest.ReservationSlots, opts => opts.MapFrom(src => new List<ReservationSlotDto>()))
                 ;
         }
     }
