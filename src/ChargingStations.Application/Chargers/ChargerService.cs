@@ -19,11 +19,14 @@ namespace ChargingStations.Application.Chargers
         public async Task<ChargerDto> GetAsync(int chargerId)
         {
             var charger = await _unitOfWork.ChargerRepository.GetAsync(chargerId);
+            var chargingStation = await _unitOfWork.ChargingStationRepository.GetAsync(charger.ChargingStationId);
 
-            if (charger == null)
+            if (charger.Id == 0 || chargingStation == null)
                 return null;
 
             var chargerDto = _mapper.Map<Charger,ChargerDto>(charger);
+            chargerDto.ChargingStationName = chargingStation.Name;
+            chargerDto.Address = chargingStation.Address;
 
             var chargerModel = await _unitOfWork.ChargerModelRepository.GetAsync(charger.ChargerModelId);
             chargerDto.ModelName = chargerModel.Name;
