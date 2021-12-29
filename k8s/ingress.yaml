@@ -18,3 +18,17 @@ spec:
                 name: charging-stations-ms
                 port:
                   number: 80
+          - path: /reservations-ms(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: reservations-ms
+                port:
+                  number: 80
+          - path: /comments-ms(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: comments-ms
+                port:
+                  number: 80
