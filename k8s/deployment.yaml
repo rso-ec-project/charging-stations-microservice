@@ -13,7 +13,7 @@ spec:
         app: charging-stations-ms
     spec:
       containers:
-        - image: anzx10/charging-stations-microservice:2021-12-02-00-50-51
+        - image: anzx10/charging-stations-microservice:v3.0
           name: charging-stations-ms
           env:
             - name: DB_HOST
