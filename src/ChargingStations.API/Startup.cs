@@ -149,8 +149,6 @@ namespace ChargingStations.API
 
             app.UseAuthorization();
 
-            app.UseConsul(lifetime);
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
