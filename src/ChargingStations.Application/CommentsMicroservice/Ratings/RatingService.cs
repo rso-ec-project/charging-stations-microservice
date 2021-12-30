@@ -10,20 +10,17 @@ namespace ChargingStations.Application.CommentsMicroservice.Ratings
     public class RatingService : IRatingService
     {
         private readonly CommentsMicroServiceClient _commentsMicroServiceClient;
-        private readonly IServiceDiscoveryClient _serviceDiscoveryClient;
-        private const string ServiceName = "comments-ms";
-
-        public RatingService(CommentsMicroServiceClient commentsMicroServiceClient, IServiceDiscoveryClient serviceDiscoveryClient)
+        private const string ServiceUrl = "https://comments-ms/api/comments";
+        public RatingService(CommentsMicroServiceClient commentsMicroServiceClient)
         {
             _commentsMicroServiceClient = commentsMicroServiceClient;
-            _serviceDiscoveryClient = serviceDiscoveryClient;
         }
 
         public async Task<RatingDto> GetAsync(int chargingStationId)
         {
             try
             {
-                _commentsMicroServiceClient.Client.BaseAddress = await _serviceDiscoveryClient.GetRequestUriAsync(ServiceName);
+                _commentsMicroServiceClient.Client.BaseAddress = new Uri(await _commentsMicroServiceClient.Client.GetStringAsync(ServiceUrl));
                 var responseMessage = _commentsMicroServiceClient.Client.GetAsync($"Ratings?chargingStationId={chargingStationId}").Result;
 
                 if (responseMessage.StatusCode == HttpStatusCode.NotFound)

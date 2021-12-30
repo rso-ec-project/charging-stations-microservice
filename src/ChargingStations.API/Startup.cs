@@ -22,6 +22,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Steeltoe.Common.Discovery;
+using Steeltoe.Discovery.Client;
 using System;
 using System.Net.Http;
 
@@ -63,16 +65,18 @@ namespace ChargingStations.API
             services.AddScoped<IChargingStationRepository, ChargingStationRepository>();
             services.AddScoped<ITenantRepository, TenantRepository>();
 
-            services.AddConsul(Configuration);
+            services.AddDiscoveryClient(Configuration);
 
             services.AddHttpClient<CommentsMicroServiceClient>()
-                .ConfigurePrimaryHttpMessageHandler(() =>
-                    new HttpClientHandler()
+                .ConfigurePrimaryHttpMessageHandler((sp) =>
                     {
-                        ServerCertificateCustomValidationCallback =
-                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        var handler = sp.GetRequiredService<DiscoveryHttpClientHandler>();
+                        handler.ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                        return handler;
                     }
                 );
+                
 
             services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
                 {
