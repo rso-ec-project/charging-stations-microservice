@@ -37,4 +37,10 @@
     <ProjectReference Include="..\ChargingStations.Infrastructure\ChargingStations.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
