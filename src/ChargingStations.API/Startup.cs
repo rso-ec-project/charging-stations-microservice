@@ -80,11 +80,11 @@ namespace ChargingStations.API
                             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                     }
                 ).AddServiceDiscovery();
-                
+
 
             services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
                 {
-                    SetHttpClientBaseAddress(client, new Uri(Configuration["ApplicationSettings:ReservationsMSAddress"]));
+                    SetHttpClientBaseAddress(client, new Uri("https://reservations-ms/"));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
@@ -93,7 +93,7 @@ namespace ChargingStations.API
                         ServerCertificateCustomValidationCallback =
                             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                     }
-                );
+                ).AddServiceDiscovery();
 
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
