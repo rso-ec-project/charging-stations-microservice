@@ -70,7 +70,7 @@ namespace ChargingStations.API
 
             services.AddHttpClient<CommentsMicroServiceClient>((_, client) =>
                 {
-                    SetHttpClientBaseAddress(client, new Uri("http://comments-ms/"));
+                    SetHttpClientBaseAddress(client, new Uri("http://comments-ms/api/v1/"));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
@@ -84,7 +84,7 @@ namespace ChargingStations.API
 
             services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
                 {
-                    SetHttpClientBaseAddress(client, new Uri("https://reservations-ms/"));
+                    SetHttpClientBaseAddress(client, new Uri("http://reservations-ms/"));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
