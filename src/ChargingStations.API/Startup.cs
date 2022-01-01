@@ -22,7 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Steeltoe.Common.Discovery;
+using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 using System;
@@ -68,15 +68,18 @@ namespace ChargingStations.API
 
             services.AddServiceDiscovery(options => options.UseConsul());
 
-            services.AddHttpClient<CommentsMicroServiceClient>()
-                .ConfigurePrimaryHttpMessageHandler((sp) =>
+            services.AddHttpClient<CommentsMicroServiceClient>((_, client) =>
+                {
+                    SetHttpClientBaseAddress(client, new Uri("http://comments-ms/"));
+                    SetHttpClientRequestHeader(client, "ChargingStationsMS");
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
                     {
-                        var handler = sp.GetRequiredService<DiscoveryHttpClientHandler>();
-                        handler.ServerCertificateCustomValidationCallback =
-                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-                        return handler;
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                     }
-                );
+                ).AddServiceDiscovery();
                 
 
             services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
