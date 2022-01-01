@@ -71,7 +71,7 @@ namespace ChargingStations.API
             services.AddHttpClient<CommentsMicroServiceClient>((_, client) =>
                 {
                     var version = FormatConfigString(Configuration["CommentsVersion"]);
-                    SetHttpClientBaseAddress(client, new Uri($"http://comments-ms/api/{version}/"));
+                    SetHttpClientBaseAddress(client, new Uri($"http://comments-ms:80/api/{version}/"));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
@@ -86,7 +86,7 @@ namespace ChargingStations.API
             services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
                 {
                     var version = FormatConfigString(Configuration["ReservationsVersion"]);
-                    SetHttpClientBaseAddress(client, new Uri($"http://reservations-ms/api/{version}/"));
+                    SetHttpClientBaseAddress(client, new Uri($"http://reservations-ms:80/api/{version}/"));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
