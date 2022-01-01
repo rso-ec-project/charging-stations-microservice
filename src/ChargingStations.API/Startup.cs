@@ -24,6 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Steeltoe.Common.Discovery;
 using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 using System;
 using System.Net.Http;
 
@@ -65,7 +66,7 @@ namespace ChargingStations.API
             services.AddScoped<IChargingStationRepository, ChargingStationRepository>();
             services.AddScoped<ITenantRepository, TenantRepository>();
 
-            services.AddDiscoveryClient(Configuration);
+            services.AddServiceDiscovery(options => options.UseConsul());
 
             services.AddHttpClient<CommentsMicroServiceClient>()
                 .ConfigurePrimaryHttpMessageHandler((sp) =>
