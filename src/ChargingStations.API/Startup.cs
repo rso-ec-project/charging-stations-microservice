@@ -84,7 +84,7 @@ namespace ChargingStations.API
 
             services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
                 {
-                    SetHttpClientBaseAddress(client, new Uri("http://reservations-ms/"));
+                    SetHttpClientBaseAddress(client, new Uri("http://reservations-ms/api/v1"));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
