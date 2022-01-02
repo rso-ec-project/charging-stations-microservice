@@ -1,6 +1,5 @@
 using AutoMapper;
 using ChargingStations.API.Extensions;
-using ChargingStations.API.HealthChecks;
 using ChargingStations.Application.ChargerModels;
 using ChargingStations.Application.Chargers;
 using ChargingStations.Application.ChargingStations;

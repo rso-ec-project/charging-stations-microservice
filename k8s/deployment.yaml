@@ -34,9 +34,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: status.hostIP
-            - name: CONSUL_HTTP_ADDR
-              value: http://$(HOST_IP):8500
-              
+
           ports:
             - containerPort: 80
               name: server
