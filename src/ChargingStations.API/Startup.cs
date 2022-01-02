@@ -1,5 +1,6 @@
 using AutoMapper;
 using ChargingStations.API.Extensions;
+using ChargingStations.API.HealthChecks;
 using ChargingStations.Application.ChargerModels;
 using ChargingStations.Application.Chargers;
 using ChargingStations.Application.ChargingStations;
@@ -66,6 +67,7 @@ namespace ChargingStations.API
             services.AddScoped<IChargingStationRepository, ChargingStationRepository>();
             services.AddScoped<ITenantRepository, TenantRepository>();
 
+            Configuration["Consul:Host"] = Environment.GetEnvironmentVariable("HOST_IP");
             services.AddServiceDiscovery(options => options.UseConsul());
 
             // Comments MS Client

@@ -27,6 +27,16 @@ spec:
                 secretKeyRef:
                   name: charging-stations-ms
                   key: db-password
+
+              # Consul
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: CONSUL_HTTP_ADDR
+              value: http://$(HOST_IP):8500
+              
           ports:
             - containerPort: 80
               name: server
