@@ -68,10 +68,26 @@ namespace ChargingStations.API
 
             services.AddServiceDiscovery(options => options.UseConsul());
 
-            services.AddHttpClient<CommentsMicroServiceClient>((_, client) =>
+            // Comments MS Client
+
+            services.AddTransient<CommentsMicroServiceClient>();
+
+            services.AddHttpClient("comments-dev", (_, client) =>
                 {
-                    var version = FormatConfigString(Configuration["CommentsVersion"]);
-                    SetHttpClientBaseAddress(client, new Uri($"http://comments-ms:80/api/{version}/"));
+                    SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["CommentsService:DevAddress"])));
+                    SetHttpClientRequestHeader(client, "ChargingStationsMS");
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    }
+                );
+
+            services.AddHttpClient("comments", (_, client) => 
+                {
+                    SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["CommentsService:Address"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
@@ -82,11 +98,26 @@ namespace ChargingStations.API
                     }
                 ).AddServiceDiscovery();
 
+            // Reservations MS Client
 
-            services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
+            services.AddTransient<ReservationsMicroServiceClient>();
+
+            services.AddHttpClient("reservations-dev", (_, client) =>
                 {
-                    var version = FormatConfigString(Configuration["ReservationsVersion"]);
-                    SetHttpClientBaseAddress(client, new Uri($"http://reservations-ms:80/api/{version}/"));
+                    SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["ReservationsService:DevAddress"])));
+                    SetHttpClientRequestHeader(client, "ChargingStationsMS");
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    }
+                );
+
+            services.AddHttpClient("reservations", (_, client) =>
+                {
+                    SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["ReservationsService:Address"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
@@ -158,7 +189,7 @@ namespace ChargingStations.API
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChargingStations.API v1"));
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 
 namespace ChargingStations.Application.Shared
 {
@@ -6,9 +7,10 @@ namespace ChargingStations.Application.Shared
     {
         public HttpClient Client { get; set; }
 
-        public ReservationsMicroServiceClient(HttpClient client)
+        public ReservationsMicroServiceClient(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
-            Client = client;
+            var commentsServiceEnv = configuration["ReservationsService:Environment"].Replace("\"", "");
+            Client = httpClientFactory.CreateClient(commentsServiceEnv.Equals("dev") ? "reservations-dev" : "reservations");
         }
     }
 }
