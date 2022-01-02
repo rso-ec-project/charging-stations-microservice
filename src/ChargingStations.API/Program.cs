@@ -28,7 +28,7 @@ namespace ChargingStations.API
                             options =>
                             {
                                 options.ConsulConfigurationOptions =
-                                    cco => { cco.Address = new Uri($"http://{config["Consul:Host"]}:{config["Consul:Port"]}"); };
+                                    cco => { cco.Address = new Uri(Environment.GetEnvironmentVariable("CONSUL_HTTP_ADDR") ?? string.Empty); };
                                 options.Optional = false;
                                 options.ReloadOnChange = true;
                                 options.Parser = new SimpleConfigurationParser();

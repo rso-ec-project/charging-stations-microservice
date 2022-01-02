@@ -53,7 +53,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 80
+    - port: 8081
       protocol: TCP
       targetPort: server
   selector:
