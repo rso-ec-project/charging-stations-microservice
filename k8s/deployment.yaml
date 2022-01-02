@@ -31,6 +31,7 @@ spec:
             - containerPort: 80
               name: server
               protocol: TCP
+          imagePullPolicy: Always
           # livenessProbe:
           #   httpGet:
           #     path: /health/live

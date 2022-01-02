@@ -21,6 +21,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 using System;
 using System.Net.Http;
 
@@ -38,7 +42,7 @@ namespace ChargingStations.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>((sp, options) =>
+            services.AddDbContext<ApplicationDbContext>((_, options) =>
             {
                 options.UseNpgsql(GetConnectionString());
             });
@@ -62,9 +66,15 @@ namespace ChargingStations.API
             services.AddScoped<IChargingStationRepository, ChargingStationRepository>();
             services.AddScoped<ITenantRepository, TenantRepository>();
 
-            services.AddHttpClient<CommentsMicroServiceClient>((_, client) =>
+            services.AddServiceDiscovery(options => options.UseConsul());
+
+            // Comments MS Client
+
+            services.AddTransient<CommentsMicroServiceClient>();
+
+            services.AddHttpClient("comments-dev", (_, client) =>
                 {
-                    SetHttpClientBaseAddress(client, new Uri(Configuration["ApplicationSettings:CommentsMSAddress"]));
+                    SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["CommentsService:DevAddress"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
@@ -75,9 +85,26 @@ namespace ChargingStations.API
                     }
                 );
 
-            services.AddHttpClient<ReservationsMicroServiceClient>((_, client) =>
+            services.AddHttpClient("comments", (_, client) => 
                 {
-                    SetHttpClientBaseAddress(client, new Uri(Configuration["ApplicationSettings:ReservationsMSAddress"]));
+                    SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["CommentsService:Address"])));
+                    SetHttpClientRequestHeader(client, "ChargingStationsMS");
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    }
+                ).AddServiceDiscovery();
+
+            // Reservations MS Client
+
+            services.AddTransient<ReservationsMicroServiceClient>();
+
+            services.AddHttpClient("reservations-dev", (_, client) =>
+                {
+                    SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["ReservationsService:DevAddress"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
@@ -87,6 +114,19 @@ namespace ChargingStations.API
                             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                     }
                 );
+
+            services.AddHttpClient("reservations", (_, client) =>
+                {
+                    SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["ReservationsService:Address"])));
+                    SetHttpClientRequestHeader(client, "ChargingStationsMS");
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    }
+                ).AddServiceDiscovery();
 
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
@@ -101,6 +141,11 @@ namespace ChargingStations.API
                 config.AssumeDefaultVersionWhenUnspecified = true;
                 config.ReportApiVersions = true;
             });
+        }
+
+        private static string FormatConfigString(string connectionString)
+        {
+            return connectionString.Replace("\"", "");
         }
 
         private static void SetHttpClientRequestHeader(HttpClient client, string userAgent)
@@ -139,7 +184,7 @@ namespace ChargingStations.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChargingStations.API v1"));
