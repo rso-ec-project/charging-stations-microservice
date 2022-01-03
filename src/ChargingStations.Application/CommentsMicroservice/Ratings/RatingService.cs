@@ -10,7 +10,6 @@ namespace ChargingStations.Application.CommentsMicroservice.Ratings
     public class RatingService : IRatingService
     {
         private readonly CommentsMicroServiceClient _commentsMicroServiceClient;
-
         public RatingService(CommentsMicroServiceClient commentsMicroServiceClient)
         {
             _commentsMicroServiceClient = commentsMicroServiceClient;

@@ -13,7 +13,7 @@ spec:
         app: charging-stations-ms
     spec:
       containers:
-        - image: anzx10/charging-stations-microservice:2021-12-02-00-50-51
+        - image: anzx10/charging-stations-microservice:v4.0
           name: charging-stations-ms
           env:
             - name: DB_HOST
@@ -27,10 +27,19 @@ spec:
                 secretKeyRef:
                   name: charging-stations-ms
                   key: db-password
+
+              # Consul
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+
           ports:
             - containerPort: 80
               name: server
               protocol: TCP
+          imagePullPolicy: Always
           # livenessProbe:
           #   httpGet:
           #     path: /health/live
@@ -52,7 +61,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 80
+    - port: 8081
       protocol: TCP
       targetPort: server
   selector:
