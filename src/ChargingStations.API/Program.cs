@@ -23,12 +23,16 @@ namespace ChargingStations.API
                             .AddJsonFile("appsettings.json", optional: false)
                             .Build();
 
+                        config["Consul:Host"] = Environment.GetEnvironmentVariable("HOST_IP");
+                        var consulHost = config["Consul:Host"];
+                        var consulPort = config["Consul:Port"];
+
                         builder.AddConsul(
                             "ChargingStationsMicroservice",
                             options =>
                             {
                                 options.ConsulConfigurationOptions =
-                                    cco => { cco.Address = new Uri($"http://{config["Consul:Host"]}:{config["Consul:Port"]}"); };
+                                    cco => { cco.Address = new Uri($"http://{consulHost}:{consulPort}"); };
                                 options.Optional = false;
                                 options.ReloadOnChange = true;
                                 options.Parser = new SimpleConfigurationParser();

@@ -67,6 +67,7 @@ namespace ChargingStations.API
             services.AddScoped<IChargingStationRepository, ChargingStationRepository>();
             services.AddScoped<ITenantRepository, TenantRepository>();
 
+            Configuration["Consul:Host"] = Environment.GetEnvironmentVariable("HOST_IP");
             services.AddServiceDiscovery(options => options.UseConsul());
 
             // Comments MS Client

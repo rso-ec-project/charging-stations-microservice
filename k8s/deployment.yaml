@@ -27,6 +27,14 @@ spec:
                 secretKeyRef:
                   name: charging-stations-ms
                   key: db-password
+
+              # Consul
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+
           ports:
             - containerPort: 80
               name: server
@@ -53,7 +61,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 80
+    - port: 8081
       protocol: TCP
       targetPort: server
   selector:
