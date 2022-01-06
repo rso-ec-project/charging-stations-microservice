@@ -28,4 +28,4 @@ jobs:
       with:
         file: ./src/Dockerfile
         push: true
-        tags: anzx10/charging-stations-microservice:v3.0
+        tags: anzx10/charging-stations-microservice:v4.0
