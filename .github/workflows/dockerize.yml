@@ -2,9 +2,9 @@ name: Build with dotnet and package as Docker container
 
 on:
   push:
-    branches: [main, 53-consul-service-discovery]
-  pull_request:
     branches: [main]
+  pull_request:
+    branches: [main, development]
     
 jobs:
   build:
