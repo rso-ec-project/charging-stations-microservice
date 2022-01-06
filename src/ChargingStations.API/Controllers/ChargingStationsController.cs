@@ -34,7 +34,7 @@ namespace ChargingStations.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ChargingStationDto>> Get(int id, [FromQuery, Required] double lat, [FromQuery, Required] double lng)
+        public async Task<ActionResult<ChargingStationDto>> Get(int id, [FromQuery] double? lat = null, [FromQuery] double? lng = null)
         {
             var chargingStation = await _chargingStationService.GetAsync(id, lat, lng);
 

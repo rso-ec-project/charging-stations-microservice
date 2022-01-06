@@ -49,7 +49,7 @@ namespace ChargingStations.Application.ChargingStations
             return chargingStationDtos;
         }
 
-        public async Task<ChargingStationDto> GetAsync(int chargingStationId, double latitude, double longitude)
+        public async Task<ChargingStationDto> GetAsync(int chargingStationId, double? latitude, double? longitude)
         {
             var chargingStation = await _unitOfWork.ChargingStationRepository.GetAsync(chargingStationId);
             var chargingStationDto = _mapper.Map<ChargingStation, ChargingStationDto>(chargingStation);
@@ -100,11 +100,14 @@ namespace ChargingStations.Application.ChargingStations
                 }
             }
 
-            var distance = await _distanceService.GetAsync(latitude, longitude, chargingStationDto.Latitude, chargingStationDto.Longitude);
-
-            if (distance != null)
+            if (latitude != null && longitude != null)
             {
-                chargingStationDto.DistanceFromLocation = distance.Distance;
+                var distance = await _distanceService.GetAsync((double) latitude, (double) longitude, chargingStationDto.Latitude, chargingStationDto.Longitude);
+
+                if (distance != null)
+                {
+                    chargingStationDto.DistanceFromLocation = distance.Distance;
+                }
             }
 
             return chargingStationDto;
