@@ -37,7 +37,7 @@ namespace ChargingStations.Application.News
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return null;
+                throw;
             }
         }
     }

@@ -4,6 +4,7 @@ using ChargingStations.Application.ChargerModels;
 using ChargingStations.Application.Chargers;
 using ChargingStations.Application.ChargingStations;
 using ChargingStations.Application.CommentsMicroservice.Ratings;
+using ChargingStations.Application.Distances;
 using ChargingStations.Application.News;
 using ChargingStations.Application.ReservationsMicroService.ReservationSlots;
 using ChargingStations.Application.Shared;
@@ -62,6 +63,7 @@ namespace ChargingStations.API
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IReservationSlotService, ReservationSlotService>();
             services.AddScoped<INewsService, NewsService>();
+            services.AddScoped<IDistanceService, DistanceService>();
 
             services.AddScoped<IChargerRepository, ChargerRepository>();
             services.AddScoped<IChargerModelRepository, ChargerModelRepository>();
@@ -144,6 +146,24 @@ namespace ChargingStations.API
                         ServerCertificateCustomValidationCallback =
                             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                     });
+
+            services.AddHttpClient<DistanceCalculatorClient>((_, client) =>
+                {
+                    var host = FormatConfigString(Configuration["DistanceCalculatorAPI:Host"]);
+                    var version = FormatConfigString(Configuration["DistanceCalculatorAPI:Version"]);
+                    SetHttpClientBaseAddress(client, new Uri($"https://{host}/{version}/"));
+                    client.DefaultRequestHeaders.Add("x-rapidapi-host", host);
+                    client.DefaultRequestHeaders.Add("x-rapidapi-key", FormatConfigString(Configuration["DistanceCalculatorAPI:Key"]));
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    });
+
+
+
 
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
