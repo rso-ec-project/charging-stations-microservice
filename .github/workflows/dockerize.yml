@@ -2,7 +2,7 @@ name: Build with dotnet and package as Docker container
 
 on:
   push:
-    branches: [main, 53-consul-service-discovery]
+    branches: [main, 62-3rd-party-apis]
   pull_request:
     branches: [main]
     
@@ -28,4 +28,4 @@ jobs:
       with:
         file: ./src/Dockerfile
         push: true
-        tags: anzx10/charging-stations-microservice:v3.0
+        tags: anzx10/charging-stations-microservice:v4.0

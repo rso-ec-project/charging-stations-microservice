@@ -4,6 +4,8 @@ using ChargingStations.Application.ChargerModels;
 using ChargingStations.Application.Chargers;
 using ChargingStations.Application.ChargingStations;
 using ChargingStations.Application.CommentsMicroservice.Ratings;
+using ChargingStations.Application.Distances;
+using ChargingStations.Application.News;
 using ChargingStations.Application.ReservationsMicroService.ReservationSlots;
 using ChargingStations.Application.Shared;
 using ChargingStations.Application.Tenants;
@@ -22,7 +24,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Polly;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
@@ -61,6 +62,8 @@ namespace ChargingStations.API
 
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IReservationSlotService, ReservationSlotService>();
+            services.AddScoped<INewsService, NewsService>();
+            services.AddScoped<IDistanceService, DistanceService>();
 
             services.AddScoped<IChargerRepository, ChargerRepository>();
             services.AddScoped<IChargerModelRepository, ChargerModelRepository>();
@@ -91,10 +94,6 @@ namespace ChargingStations.API
                     SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["CommentsService:Address"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
-                .AddTransientHttpErrorPolicy(p =>
-                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
-                .AddTransientHttpErrorPolicy(p =>
-                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -125,10 +124,6 @@ namespace ChargingStations.API
                     SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["ReservationsService:Address"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
-                .AddTransientHttpErrorPolicy(p =>
-                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
-                .AddTransientHttpErrorPolicy(p =>
-                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -136,6 +131,39 @@ namespace ChargingStations.API
                             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                     }
                 ).AddServiceDiscovery();
+
+            // 3rd party APIs
+
+            services.AddHttpClient<ElectricVehicleUpdatesClient>((_, client) =>
+                {
+                    SetHttpClientBaseAddress(client, new Uri($"https://{FormatConfigString(Configuration["ElectricVehicleUpdatesAPI:Host"])}/"));
+                    client.DefaultRequestHeaders.Add("x-rapidapi-host", FormatConfigString(Configuration["ElectricVehicleUpdatesAPI:Host"]));
+                    client.DefaultRequestHeaders.Add("x-rapidapi-key", FormatConfigString(Configuration["ElectricVehicleUpdatesAPI:Key"]));
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    });
+
+            services.AddHttpClient<DistanceCalculatorClient>((_, client) =>
+                {
+                    var host = FormatConfigString(Configuration["DistanceCalculatorAPI:Host"]);
+                    var version = FormatConfigString(Configuration["DistanceCalculatorAPI:Version"]);
+                    SetHttpClientBaseAddress(client, new Uri($"https://{host}/{version}/"));
+                    client.DefaultRequestHeaders.Add("x-rapidapi-host", host);
+                    client.DefaultRequestHeaders.Add("x-rapidapi-key", FormatConfigString(Configuration["DistanceCalculatorAPI:Key"]));
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    });
+
+
+
 
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
