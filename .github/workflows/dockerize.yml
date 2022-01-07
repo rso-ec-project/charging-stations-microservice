@@ -2,7 +2,7 @@ name: Build with dotnet and package as Docker container
 
 on:
   push:
-    branches: [main, 62-3rd-party-apis]
+    branches: [main]
   pull_request:
     branches: [main]
     
