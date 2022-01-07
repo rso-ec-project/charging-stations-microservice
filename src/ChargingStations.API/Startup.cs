@@ -29,6 +29,7 @@ using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 using System;
 using System.Net.Http;
+using ChargingStations.API.HealthChecks;
 
 namespace ChargingStations.API
 {
@@ -166,7 +167,10 @@ namespace ChargingStations.API
 
 
             services.AddHealthChecks()
-                .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
+                .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" })
+                .AddCheck<DistanceApiHealthCheck>("DistanceApiHealthCheck", tags: new[] { "ready" })
+                .AddCheck<EvUpdatesApiHealthCheck>("EvUpdatesApiHealthCheck", tags: new[] { "ready" })
+                ;
 
             services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
@@ -235,10 +239,7 @@ namespace ChargingStations.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
-                {
-                    Predicate = (check) => check.Tags.Contains("ready")
-                });
+                endpoints.MapCustomHealthChecks("Readiness");
                 endpoints.MapHealthChecks("health/live", new HealthCheckOptions()
                 {
                     Predicate = _ => false
