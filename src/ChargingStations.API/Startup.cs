@@ -239,11 +239,11 @@ namespace ChargingStations.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("api/health/ready", new HealthCheckOptions()
+                endpoints.MapHealthChecks("health/ready", new HealthCheckOptions()
                 {
                     Predicate = (check) => check.Tags.Contains("ready")
                 });
-                endpoints.MapHealthChecks("api/health/live", new HealthCheckOptions()
+                endpoints.MapHealthChecks("health/live", new HealthCheckOptions()
                 {
                     Predicate = _ => false
                 });
