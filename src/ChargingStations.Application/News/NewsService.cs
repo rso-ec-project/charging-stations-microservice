@@ -1,4 +1,5 @@
 ﻿using ChargingStations.Application.Shared;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -10,16 +11,21 @@ namespace ChargingStations.Application.News
     public class NewsService : INewsService
     {
         private readonly ElectricVehicleUpdatesClient _electricVehicleUpdatesClient;
+        private readonly ILogger<NewsService> _logger;
 
-        public NewsService(ElectricVehicleUpdatesClient electricVehicleUpdatesClient)
+        public NewsService(ElectricVehicleUpdatesClient electricVehicleUpdatesClient, ILogger<NewsService> logger)
         {
             _electricVehicleUpdatesClient = electricVehicleUpdatesClient;
+            _logger = logger;
         }
 
         public async Task<List<NewsDto>> GetAsync()
         {
+            var endpoint = $"endpoint evupdates";
             try
             {
+                _logger.LogInformation($"Entered EV Updates API {endpoint}");
+
                 var responseMessage = _electricVehicleUpdatesClient.Client.GetAsync("evupdates").Result;
 
                 if (!responseMessage.IsSuccessStatusCode)
@@ -29,14 +35,17 @@ namespace ChargingStations.Application.News
 
                 await using var responseStream = await responseMessage.Content.ReadAsStreamAsync();
 
-                return await JsonSerializer.DeserializeAsync<List<NewsDto>>(responseStream, new JsonSerializerOptions()
+                var newsDtos = await JsonSerializer.DeserializeAsync<List<NewsDto>>(responseStream, new JsonSerializerOptions()
                 {
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 });
+
+                _logger.LogInformation($"Exited EV Updates API {endpoint} with: 200 OK");
+                return newsDtos;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError($"Exited EV Updates API {endpoint} with: Exception {e}");
                 throw;
             }
         }
