@@ -168,8 +168,8 @@ namespace ChargingStations.API
 
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" })
-                .AddCheck<DistanceApiHealthCheck>("DistanceApiHealthCheck", tags: new[] { "ready" })
-                .AddCheck<EvUpdatesApiHealthCheck>("EvUpdatesApiHealthCheck", tags: new[] { "ready" })
+                //.AddCheck<DistanceApiHealthCheck>("DistanceApiHealthCheck", tags: new[] { "ready" })
+                //.AddCheck<EvUpdatesApiHealthCheck>("EvUpdatesApiHealthCheck", tags: new[] { "ready" })
                 ;
 
             services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; });
@@ -239,7 +239,10 @@ namespace ChargingStations.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapCustomHealthChecks("Readiness");
+                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
+                {
+                    Predicate = (check) => check.Tags.Contains("ready")
+                });
                 endpoints.MapHealthChecks("health/live", new HealthCheckOptions()
                 {
                     Predicate = _ => false
