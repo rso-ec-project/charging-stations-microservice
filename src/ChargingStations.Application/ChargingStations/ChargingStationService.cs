@@ -100,15 +100,15 @@ namespace ChargingStations.Application.ChargingStations
                 }
             }
 
-            if (latitude != null && longitude != null)
-            {
-                var distance = await _distanceService.GetAsync((double) latitude, (double) longitude, chargingStationDto.Latitude, chargingStationDto.Longitude);
+            //if (latitude != null && longitude != null)
+            //{
+            //    var distance = await _distanceService.GetAsync((double) latitude, (double) longitude, chargingStationDto.Latitude, chargingStationDto.Longitude);
 
-                if (distance != null)
-                {
-                    chargingStationDto.DistanceFromLocation = distance.Distance;
-                }
-            }
+            //    if (distance != null)
+            //    {
+            //        chargingStationDto.DistanceFromLocation = distance.Distance;
+            //    }
+            //}
 
             return chargingStationDto;
         }
