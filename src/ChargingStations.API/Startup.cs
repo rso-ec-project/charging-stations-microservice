@@ -24,7 +24,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Polly;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
@@ -99,10 +98,6 @@ namespace ChargingStations.API
                     SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["CommentsService:Address"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
-                .AddTransientHttpErrorPolicy(p =>
-                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
-                .AddTransientHttpErrorPolicy(p =>
-                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -137,10 +132,6 @@ namespace ChargingStations.API
                     SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["ReservationsService:Address"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
-                .AddTransientHttpErrorPolicy(p =>
-                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
-                .AddTransientHttpErrorPolicy(p =>
-                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
