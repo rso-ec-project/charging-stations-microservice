@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ChargingStations.Application.Chargers;
 using ChargingStations.Application.CommentsMicroservice.Ratings;
 using ChargingStations.Application.Distances;
 using ChargingStations.Application.ReservationsMicroService.ReservationSlots;

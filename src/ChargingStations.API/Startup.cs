@@ -24,12 +24,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 using System;
 using System.Net.Http;
-using ChargingStations.API.HealthChecks;
 
 namespace ChargingStations.API
 {
@@ -83,6 +83,10 @@ namespace ChargingStations.API
                     SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["CommentsService:DevAddress"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
+                .AddTransientHttpErrorPolicy(p =>
+                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
+                .AddTransientHttpErrorPolicy(p =>
+                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -95,6 +99,10 @@ namespace ChargingStations.API
                     SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["CommentsService:Address"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
+                .AddTransientHttpErrorPolicy(p =>
+                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
+                .AddTransientHttpErrorPolicy(p =>
+                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -112,6 +120,10 @@ namespace ChargingStations.API
                     SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["ReservationsService:DevAddress"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
+                .AddTransientHttpErrorPolicy(p =>
+                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
+                .AddTransientHttpErrorPolicy(p =>
+                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -125,6 +137,10 @@ namespace ChargingStations.API
                     SetHttpClientBaseAddress(client, new Uri(FormatConfigString(Configuration["ReservationsService:Address"])));
                     SetHttpClientRequestHeader(client, "ChargingStationsMS");
                 })
+                .AddTransientHttpErrorPolicy(p =>
+                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
+                .AddTransientHttpErrorPolicy(p =>
+                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -141,6 +157,10 @@ namespace ChargingStations.API
                     client.DefaultRequestHeaders.Add("x-rapidapi-host", FormatConfigString(Configuration["ElectricVehicleUpdatesAPI:Host"]));
                     client.DefaultRequestHeaders.Add("x-rapidapi-key", FormatConfigString(Configuration["ElectricVehicleUpdatesAPI:Key"]));
                 })
+                .AddTransientHttpErrorPolicy(p =>
+                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
+                .AddTransientHttpErrorPolicy(p =>
+                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -156,6 +176,10 @@ namespace ChargingStations.API
                     client.DefaultRequestHeaders.Add("x-rapidapi-host", host);
                     client.DefaultRequestHeaders.Add("x-rapidapi-key", FormatConfigString(Configuration["DistanceCalculatorAPI:Key"]));
                 })
+                .AddTransientHttpErrorPolicy(p =>
+                    p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(500)))
+                .AddTransientHttpErrorPolicy(p =>
+                    p.CircuitBreakerAsync(5, TimeSpan.FromMilliseconds(3500)))
                 .ConfigurePrimaryHttpMessageHandler(() =>
                     new HttpClientHandler()
                     {
@@ -201,11 +225,13 @@ namespace ChargingStations.API
             client.BaseAddress = baseAddress;
         }
 
-        private static string GetConnectionString()
+        private string GetConnectionString()
         {
             var host = Environment.GetEnvironmentVariable("DB_HOST");
-            var database = Environment.GetEnvironmentVariable("DB_NAME");
-            var username = Environment.GetEnvironmentVariable("DB_USERNAME");
+            //var database = Environment.GetEnvironmentVariable("DB_NAME");
+            var database = FormatConfigString(Configuration["DB_NAME"]);
+            var username = FormatConfigString(Configuration["DB_NAME"]);
+            //var username = Environment.GetEnvironmentVariable("DB_USERNAME");
             var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
             return $"Host={host};Database={database};Username={username};Password={password}";
@@ -239,10 +265,7 @@ namespace ChargingStations.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("health/ready", new HealthCheckOptions()
-                {
-                    Predicate = (check) => check.Tags.Contains("ready")
-                });
+                endpoints.MapCustomHealthChecks("Readiness");
                 endpoints.MapHealthChecks("health/live", new HealthCheckOptions()
                 {
                     Predicate = _ => false
