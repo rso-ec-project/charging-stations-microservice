@@ -20,6 +20,10 @@ namespace ChargingStations.API.Controllers
             _newsService = newsService;
         }
 
+        /// <summary>
+        /// Get a list of news related to electric vehicles.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

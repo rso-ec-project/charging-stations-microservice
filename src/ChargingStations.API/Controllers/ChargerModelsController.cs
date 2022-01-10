@@ -20,6 +20,10 @@ namespace ChargingStations.API.Controllers
             _chargerModelService = chargerModelService;
         }
 
+        /// <summary>
+        /// Get a list of all charger models.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

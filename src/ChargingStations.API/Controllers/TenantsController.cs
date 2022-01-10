@@ -21,6 +21,10 @@ namespace ChargingStations.API.Controllers
             _tenantService = tenantService;
         }
 
+        /// <summary>
+        /// Get a list of all tenants.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -29,6 +33,11 @@ namespace ChargingStations.API.Controllers
             return await _tenantService.GetAsync();
         }
 
+        /// <summary>
+        /// Get a single tenant by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -43,6 +52,11 @@ namespace ChargingStations.API.Controllers
             return tenant;
         }
 
+        /// <summary>
+        /// Get all charging stations of a single tenant.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}/ChargingStations")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

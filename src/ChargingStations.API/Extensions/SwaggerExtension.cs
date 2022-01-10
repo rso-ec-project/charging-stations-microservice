@@ -3,7 +3,9 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace ChargingStations.API.Extensions
 {
@@ -23,6 +25,10 @@ namespace ChargingStations.API.Extensions
                 config.DocumentFilter<ResolvePathVersionFilter>();
                 config.OperationFilter<RemovePathVersionFilter>();
                 config.OperationFilter<ContentTypeFilter>();
+
+                // using System.Reflection;
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                config.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
             return services;

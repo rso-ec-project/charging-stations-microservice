@@ -22,6 +22,12 @@ namespace ChargingStations.API.Controllers
             _chargingStationService = chargingStationService;
         }
 
+        /// <summary>
+        /// Get a list of charging stations.
+        /// </summary>
+        /// <param name="lat">latitude</param>
+        /// <param name="lng">longitude</param>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -30,6 +36,13 @@ namespace ChargingStations.API.Controllers
             return await _chargingStationService.GetAsync(lat, lng);
         }
 
+        /// <summary>
+        /// Get a single charging station by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="lat">latitude</param>
+        /// <param name="lng">longitude</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -44,6 +57,11 @@ namespace ChargingStations.API.Controllers
             return chargingStation;
         }
 
+        /// <summary>
+        /// Get all chargers of a single charging station.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}/Chargers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -19,6 +19,11 @@ namespace ChargingStations.API.Controllers
             _chargerService = chargerService;
         }
 
+        /// <summary>
+        /// Get a single charger by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
