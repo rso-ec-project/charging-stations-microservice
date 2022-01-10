@@ -254,7 +254,7 @@ namespace ChargingStations.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChargingStations.API v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("charging-stations/swagger/v1/swagger.json", "ChargingStations.API v1"));
 
             app.UseHttpsRedirection();
 
