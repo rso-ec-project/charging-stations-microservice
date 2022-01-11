@@ -50,7 +50,7 @@ namespace ChargingStations.API.Extensions
                     continue;
                 }
 
-                paths.Add(key.Replace("v{version}", swaggerDoc.Info.Version), value);
+                paths.Add("/charging-stations" + key.Replace("v{version}", swaggerDoc.Info.Version), value);
             }
 
             swaggerDoc.Paths = paths;
